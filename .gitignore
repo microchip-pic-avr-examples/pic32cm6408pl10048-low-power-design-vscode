@@ -1,0 +1,8 @@
+# Untracked files in MPLABX and MPLAB-VSCODE projects
+/**/build/*
+/**/out/*
+/**/_build/*
+/**/nbproject/*
+!/**/nbproject/*.xml
+/**/dist/*
+/**/.generated_files/*

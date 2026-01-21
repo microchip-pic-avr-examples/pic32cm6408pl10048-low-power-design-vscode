@@ -1,0 +1,3 @@
+@Library('xc32_mpae_shared_pipeline') _
+
+invokePipeline()
