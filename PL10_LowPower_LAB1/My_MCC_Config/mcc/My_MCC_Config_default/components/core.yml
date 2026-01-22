@@ -1,0 +1,109 @@
+configVersion: 1.0.0
+componentName: core
+coreVersion: 5.8.3
+device: PIC32CM6408PL10048
+library: []
+dependency:
+- dependencyPackage: class com.microchip.mcc.harmony.HarmonyModule
+  name: core
+  type: module
+  version: ''
+- dependencyPackage: ''
+  name: csp
+  type: package
+  version: v3.25.0
+customDataClassName: com.microchip.utils_mh3.utils.persistence.CustomModuleData
+data:
+  attachments: {}
+  elementPosition: {}
+  symbols:
+    SUPC_INTERRUPT_ENABLE_UPDATE:
+      attributes:
+        id: SUPC_INTERRUPT_ENABLE_UPDATE
+      children:
+      - children:
+        - attributes:
+            id: core
+            value: 'true'
+          type: Dynamic
+        type: Values
+      type: Boolean
+    NVIC_0_4_ENABLE:
+      attributes:
+        id: NVIC_0_4_ENABLE
+      children:
+      - children:
+        - attributes:
+            id: core
+            value: 'false'
+          type: Dynamic
+        type: Values
+      type: Boolean
+    SUPC_INTERRUPT_ENABLE:
+      attributes:
+        id: SUPC_INTERRUPT_ENABLE
+      children:
+      - children:
+        - attributes:
+            id: supc
+            value: 'false'
+          type: Dynamic
+        type: Values
+      type: Boolean
+    NVIC_0_4_HANDLER:
+      attributes:
+        id: NVIC_0_4_HANDLER
+      children:
+      - children:
+        - attributes:
+            id: core
+            value: SUPC_Handler
+          type: Dynamic
+        type: Values
+      type: String
+    SUPC_INTERRUPT_HANDLER:
+      attributes:
+        id: SUPC_INTERRUPT_HANDLER
+      children:
+      - children:
+        - attributes:
+            id: supc
+            value: SUPC_Handler
+          type: Dynamic
+        type: Values
+      type: String
+    NVIC_0_4_HANDLER_LOCK:
+      attributes:
+        id: NVIC_0_4_HANDLER_LOCK
+      children:
+      - children:
+        - attributes:
+            id: core
+            value: 'false'
+          type: Dynamic
+        type: Values
+      type: Boolean
+    SUPC_INTERRUPT_HANDLER_LOCK:
+      attributes:
+        id: SUPC_INTERRUPT_HANDLER_LOCK
+      children:
+      - children:
+        - attributes:
+            id: supc
+            value: 'false'
+          type: Dynamic
+        type: Values
+      type: Boolean
+  userData:
+    children:
+    - attributes:
+        canvasHeight: '0'
+        canvasWidth: '0'
+      type: GraphSettings
+    - children:
+      - attributes:
+          id: profile0
+          name: Main
+        type: Profile
+      type: PowerProfiles
+    type: UserData

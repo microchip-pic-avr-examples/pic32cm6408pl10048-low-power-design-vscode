@@ -1,0 +1,13 @@
+{
+    "mplab.clangd.arguments": [
+        "--compile-commands-dir=${workspaceFolder}\\_build\\PL10_LowPower_LAB1\\default"
+    ],
+    "mplab.clangd.path": "c:\\Program Files\\Microchip\\xc32\\v5.00\\bin\\xc32-clangd.exe",
+    "cmake.sourceDirectory": "C:/Users/C76801/MPLABProjects/PL10_LowPower_LAB1/PL10_LowPower_LAB1/cmake/PL10_LowPower_LAB1/default",
+    "memory-inspector.debugTypes": [
+        "arm-debugger",
+        "embedded-debug",
+        "gdb",
+        "mplab-core-da"
+    ]
+}
