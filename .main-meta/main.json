@@ -7,7 +7,7 @@
         "version": "1.0.0",
         "displayName": "Low Power Application for PIC32CM6408PL10048",
         "projectName": "pic32cm6408pl10048-low-power-design-vscode",
-        "shortDescription": "This collection of code examples is designed to demonstrate the Standby and Idle mode low Power Application on the Arm Cortex core using the PIC32CM PL10 MCU. The following examples provide a practical guide for efficient power management.\r\n\r\n\r\n",
+        "shortDescription": "This collection of code examples is designed to demonstrate the Standby and Idle mode low Power Application on the Arm Cortex core using the PIC32CM PL10 MCU. The following examples provide a practical guide for efficient power management.",
         "ide": [
             {
                 "name": "MPLAB-VSCODE",
@@ -52,7 +52,6 @@
         "keywords": [
             "Low Power",
             "Sleep",
-            "Power Monitor",
             "VS Code",
             "MCC",
             "Harmony",
@@ -62,9 +61,9 @@
             "ADC",
             "Power Module",
             "Power Supply",
+            "Power Monitor",
             "EIC",
             "EVSYS",
-            "Low Power",
             "Idle",
             "Lighting",
             "Sensor"
