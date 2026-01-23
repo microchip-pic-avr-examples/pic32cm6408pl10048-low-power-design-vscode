@@ -3,15 +3,15 @@
     "category": "com.microchip.ide.project",
     "content": {
         "metaDataVersion": "1.3.0",
-        "name": "com.microchip.mcu.[IDE_NAME_HERE].project.pic32cm6408pl10048-low-power-design-vscode",
-        "version": " ",
-        "displayName": "",
+        "name": "com.microchip.mcu.vscode.project.pic32cm6408pl10048-low-power-design-vscode",
+        "version": "1.0.0",
+        "displayName": "Low Power Design Examples for PIC32CM6408PL10048 using MPLAB Extensions in VSCode",
         "projectName": "pic32cm6408pl10048-low-power-design-vscode",
-        "shortDescription": "This collection of code examples is designed to demonstrate and reinforce the use of low-power modes on the Arm Cortex core using the PIC32CM PL10 MCU. The examples provide a practical guidance for efficient power management.\r\n\r\n\r\n",
+        "shortDescription": "This collection of code examples is designed to demonstrate and reinforce the usage of low-power modes on the Arm Cortex core using the PIC32CM PL10 MCU. The following examples provide a practical guide for efficient power management.\r\n\r\n\r\n",
         "ide": [
             {
-                "name": "MPLAB X",
-                "semverRange": ">=6.25.0"
+                "name": "VSCode",
+                "semverRange": ">=1.0.0"
             }
         ],
         "compiler": [
@@ -21,12 +21,12 @@
             }
         ],
         "dfp": {
-            "name": "",
-            "semverRange": ""
+            "name": "PIC32CM-PL_DFP",
+            "semverRange": "^1.1.324"
         },
         "configurator": {
-            "name": "",
-            "semverRange": ""
+            "name": "MCC",
+            "semverRange": "^5.6.4"
         },
         "device": [
             {
@@ -41,8 +41,15 @@
             }
         ],
         "author": "Uriah Villa",
-        "peripherals": [],
-        "keywords": [],
+        "peripherals": [
+            "SUPC", 
+            "PM"
+        ],
+        "keywords": [
+            "Low Power",
+            "Sleep Mode",
+            "Standby Mode"
+        ],
         "additionalData": {
             "longDescription": {
                 "metaDataVersion": "1.0.0",
