@@ -31,10 +31,25 @@
                 "compiler.isolate-each-function": true,
                 "compiler.optimization-level": "-O1",
                 "compiler.place-data-into-section": true,
-                "linker.heap-size": "0",
+                "linker.heap-size": "512",
                 "linker.remove-unused-sections": true,
                 "compiler++.isolate-each-function": true,
-                "compiler++.optimization-level": "-O1"
+                "compiler++.optimization-level": "-O1",
+                "linker.no-device-startup-code": "true",
+                "compiler.extra-include-directories": [
+                    "My_MCC_Config/src",
+                    "My_MCC_Config/src/config/default",
+                    "My_MCC_Config/src/packs/CMSIS",
+                    "My_MCC_Config/src/packs/CMSIS/CMSIS/Core/Include",
+                    "My_MCC_Config/src/packs/PIC32CM6408PL10048_DFP"
+                ],
+                "compiler++.extra-include-directories": [
+                    "My_MCC_Config/src",
+                    "My_MCC_Config/src/config/default",
+                    "My_MCC_Config/src/packs/CMSIS",
+                    "My_MCC_Config/src/packs/CMSIS/CMSIS/Core/Include",
+                    "My_MCC_Config/src/packs/PIC32CM6408PL10048_DFP"
+                ]
             }
         }
     ],

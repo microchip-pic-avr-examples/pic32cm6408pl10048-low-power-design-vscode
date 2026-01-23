@@ -46,9 +46,13 @@ function(PL10_LowPower_LAB1_default_default_XC32_compile_rule target)
     target_compile_definitions(${target}
         PRIVATE "__DEBUG"
         PRIVATE "XPRJ_default=default")
-    target_include_directories(${target} PRIVATE "${PACK_REPO_PATH}/ARM/CMSIS/6.3.0/CMSIS/Core/Include")
-    target_include_directories(${target} PRIVATE "${CMAKE_CURRENT_LIST_DIR}/../../../../My_MCC_Config/src/config/default")
-    target_include_directories(${target} PRIVATE "${CMAKE_CURRENT_LIST_DIR}/../../../../My_MCC_Config/src")
+    target_include_directories(${target}
+        PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../../../My_MCC_Config/src"
+        PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../../../My_MCC_Config/src/config/default"
+        PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../../../My_MCC_Config/src/packs/CMSIS"
+        PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../../../My_MCC_Config/src/packs/CMSIS/CMSIS/Core/Include"
+        PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../../../My_MCC_Config/src/packs/PIC32CM6408PL10048_DFP"
+        PRIVATE "${PACK_REPO_PATH}/ARM/CMSIS/6.3.0/CMSIS/Core/Include")
 endfunction()
 function(PL10_LowPower_LAB1_default_default_XC32_compile_cpp_rule target)
     set(options
@@ -63,15 +67,19 @@ function(PL10_LowPower_LAB1_default_default_XC32_compile_cpp_rule target)
         "-ffunction-sections"
         "-O1"
         "-fno-common"
-        target_include_directories(${target} PRIVATE "${CMAKE_CURRENT_LIST_DIR}/../../../../My_MCC_Config/src/config/default")
-        target_include_directories(${target} PRIVATE "${CMAKE_CURRENT_LIST_DIR}/../../../../My_MCC_Config/src")
         "-mdfp=${PACK_REPO_PATH}/Microchip/PIC32CM-PL_DFP/1.1.324")
     list(REMOVE_ITEM options "")
     target_compile_options(${target} PRIVATE "${options}")
     target_compile_definitions(${target}
         PRIVATE "__DEBUG"
         PRIVATE "XPRJ_default=default")
-    target_include_directories(${target} PRIVATE "${PACK_REPO_PATH}/ARM/CMSIS/6.3.0/CMSIS/Core/Include")
+    target_include_directories(${target}
+        PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../../../My_MCC_Config/src"
+        PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../../../My_MCC_Config/src/config/default"
+        PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../../../My_MCC_Config/src/packs/CMSIS"
+        PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../../../My_MCC_Config/src/packs/CMSIS/CMSIS/Core/Include"
+        PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../../../My_MCC_Config/src/packs/PIC32CM6408PL10048_DFP"
+        PRIVATE "${PACK_REPO_PATH}/ARM/CMSIS/6.3.0/CMSIS/Core/Include")
 endfunction()
 function(PL10_LowPower_LAB1_default_dependentObject_rule target)
     set(options
@@ -87,7 +95,8 @@ function(PL10_LowPower_LAB1_default_link_rule target)
         "${DEBUGGER_OPTION_TO_LINKER}"
         "${DEBUGGER_NAME_AS_MACRO}"
         "-mprocessor=32CM6408PL10048"
-        "-Wl,--defsym=__MPLAB_BUILD=1${MP_EXTRA_LD_POST},--script=${PL10_LowPower_LAB1_default_LINKER_SCRIPT},--defsym=__MPLAB_DEBUG=1,--defsym=__DEBUG=1,--defsym=_min_heap_size=0,--gc-sections,-Map=mem.map,--report-mem,--memorysummary,memoryfile.xml"
+        "-mno-device-startup-code"
+        "-Wl,--defsym=__MPLAB_BUILD=1${MP_EXTRA_LD_POST},--script=${PL10_LowPower_LAB1_default_LINKER_SCRIPT},--defsym=__MPLAB_DEBUG=1,--defsym=__DEBUG=1,--defsym=_min_heap_size=512,--gc-sections,-Map=mem.map,--report-mem,--memorysummary,memoryfile.xml"
         "-mdfp=${PACK_REPO_PATH}/Microchip/PIC32CM-PL_DFP/1.1.324")
     list(REMOVE_ITEM options "")
     target_link_options(${target} PRIVATE "${options}")
