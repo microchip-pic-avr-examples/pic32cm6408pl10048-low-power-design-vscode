@@ -36,11 +36,20 @@
 
 int main ( void )
 {
-    /* Initialize all modules */
+    /* =========================================================================
+       INITIALIZATION PHASE
+       =========================================================================
+       Configure all peripherals, callbacks, and power settings before entering
+       the main sampling loop. UART is disabled to conserve power.
+    */
+    
+    /* System Initialization - Configure clocks, peripherals, and I/O pins */
     SYS_Initialize ( NULL );
 
+    /* Configure voltage regulator to remain active during standby mode (ultra-low-power mode) */
     WaitForULP();
 
+    /* Enter standby sleep mode to conserve power */
     PM_StandbyModeEnter ();
 
     while ( true )
