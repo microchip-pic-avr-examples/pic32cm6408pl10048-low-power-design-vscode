@@ -1,0 +1,38 @@
+{
+    "mplab.clangd.arguments": [
+        "--compile-commands-dir=${workspaceFolder}\\_build\\PL10_LowPower_LAB4\\default"
+    ],
+    "mplab.clangd.path": "c:\\Program Files\\Microchip\\xc32\\v5.00\\bin\\xc32-clangd.exe",
+    "memory-inspector.debugTypes": [
+        "arm-debugger",
+        "embedded-debug",
+        "gdb",
+        "mplab-core-da"
+    ],
+    "mplab.ioview.columnWidths": {
+        "My_Project-default": [
+            100,
+            100,
+            100,
+            100,
+            100,
+            202
+        ],
+        "PL10_LowPower_LAB4-default": [
+            100,
+            100,
+            100,
+            100,
+            100,
+            20
+        ]
+    },
+    "mplab.ioview.taggedNodes": {
+        "My_Project-default": [],
+        "PL10_LowPower_LAB4-default": []
+    },
+    "chat.tools.terminal.autoApprove": {
+        "cmake": true
+    },
+    "cmake.sourceDirectory": "C:/Users/C76801/MPLABProjects/PL10_LowPower_LAB4/cmake/PL10_LowPower_LAB4/default"
+}

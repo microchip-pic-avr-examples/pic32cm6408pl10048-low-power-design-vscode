@@ -1,5 +1,5 @@
 /*******************************************************************************
-  Main Source File
+  Main Source File - Lab 1: Standby Wake Demo
 
   Company:
     Microchip Technology Inc.
@@ -8,12 +8,13 @@
     main.c
 
   Summary:
-    This file contains the "main" function for a project.
+    Basic low-power initialization and standby entry.
 
   Description:
-    This file contains the "main" function for a project.  The
-    "main" function calls the "SYS_Initialize" function to initialize the state
-    machines of all modules in the system
+    This application demonstrates the minimum low-power flow:
+    - Initialize system clocks, peripherals, and I/O pins
+    - Configure the voltage regulator for ultra-low-power standby operation
+    - Enter standby mode and service Harmony tasks in the main loop
  *******************************************************************************/
 
 // *****************************************************************************
@@ -39,18 +40,24 @@ int main ( void )
     /* =========================================================================
        INITIALIZATION PHASE
        =========================================================================
-       Configure all peripherals, callbacks, and power settings before entering
-       the main sampling loop. UART is disabled to conserve power.
+     Configure all peripherals and power settings before entering
+     the main loop.
     */
     
     /* System Initialization - Configure clocks, peripherals, and I/O pins */
     SYS_Initialize ( NULL );
 
-    /* Configure voltage regulator to remain active during standby mode (ultra-low-power mode) */
+    /* Configure voltage regulator for ultra-low-power standby mode */
     WaitForULP();
 
     /* Enter standby sleep mode to conserve power */
     PM_StandbyModeEnter ();
+
+    /* =========================================================================
+       MAIN APPLICATION LOOP
+       =========================================================================
+       Maintain Harmony tasks after wake-up events.
+    */
 
     while ( true )
     {

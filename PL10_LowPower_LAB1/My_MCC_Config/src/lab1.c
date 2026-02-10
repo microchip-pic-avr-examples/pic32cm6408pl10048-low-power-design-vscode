@@ -1,5 +1,5 @@
 /*******************************************************************************
-  Lab1 Source File
+  Lab 1 Source File
 
   Company:
     Microchip Technology Inc.
@@ -8,14 +8,19 @@
     lab1.c
 
   Summary:
-    Low-power light sensor sampling and data transmission application.
+    Low-power helper functions for standby operation.
 
   Description:
-    This file contains the "main" function for a project.  The
-    "main" function calls the "SYS_Initialize" function to initialize the state
-    machines of all modules in the system
+    This file provides Lab 1 helper routines used by the application:
+    - Configure the voltage regulator for ultra-low-power standby mode
  *******************************************************************************/
- 
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: Included Files
+// *****************************************************************************
+// *****************************************************************************
+
 #include "definitions.h"                // SYS function prototypes
 #include "lab1.h"
 #include <stdio.h>

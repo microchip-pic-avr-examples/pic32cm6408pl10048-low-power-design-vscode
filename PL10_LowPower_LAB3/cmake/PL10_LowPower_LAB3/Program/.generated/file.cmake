@@ -1,0 +1,53 @@
+# The following variables contains the files used by the different stages of the build process.
+set(PL10_LowPower_LAB3_Program_Program_toolchain_FILE_TYPE_assemble)
+set_source_files_properties(${PL10_LowPower_LAB3_Program_Program_toolchain_FILE_TYPE_assemble} PROPERTIES LANGUAGE ASM)
+
+# For assembly files, add "." to the include path for each file so that .include with a relative path works
+foreach(source_file ${PL10_LowPower_LAB3_Program_Program_toolchain_FILE_TYPE_assemble})
+        set_source_files_properties(${source_file} PROPERTIES INCLUDE_DIRECTORIES "$<PATH:NORMAL_PATH,$<PATH:REMOVE_FILENAME,${source_file}>>")
+endforeach()
+
+set(PL10_LowPower_LAB3_Program_Program_toolchain_FILE_TYPE_assembleWithPreprocess)
+set_source_files_properties(${PL10_LowPower_LAB3_Program_Program_toolchain_FILE_TYPE_assembleWithPreprocess} PROPERTIES LANGUAGE ASM)
+
+# For assembly files, add "." to the include path for each file so that .include with a relative path works
+foreach(source_file ${PL10_LowPower_LAB3_Program_Program_toolchain_FILE_TYPE_assembleWithPreprocess})
+        set_source_files_properties(${source_file} PROPERTIES INCLUDE_DIRECTORIES "$<PATH:NORMAL_PATH,$<PATH:REMOVE_FILENAME,${source_file}>>")
+endforeach()
+
+set(PL10_LowPower_LAB3_Program_Program_toolchain_FILE_TYPE_compile
+    "${CMAKE_CURRENT_SOURCE_DIR}/../../../My_MCC_Config/src/config/default/exceptions.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../../../My_MCC_Config/src/config/default/initialization.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../../../My_MCC_Config/src/config/default/interrupts.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../../../My_MCC_Config/src/config/default/libc_syscalls.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../../../My_MCC_Config/src/config/default/peripheral/adc/plib_adc0.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../../../My_MCC_Config/src/config/default/peripheral/clock/plib_clock.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../../../My_MCC_Config/src/config/default/peripheral/evsys/plib_evsys.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../../../My_MCC_Config/src/config/default/peripheral/nvic/plib_nvic.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../../../My_MCC_Config/src/config/default/peripheral/nvmctrl/plib_nvmctrl.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../../../My_MCC_Config/src/config/default/peripheral/pm/plib_pm.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../../../My_MCC_Config/src/config/default/peripheral/port/plib_port.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../../../My_MCC_Config/src/config/default/peripheral/rtc/plib_rtc_timer.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../../../My_MCC_Config/src/config/default/peripheral/sercom/usart/plib_sercom1_usart.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../../../My_MCC_Config/src/config/default/peripheral/supc/plib_supc.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../../../My_MCC_Config/src/config/default/peripheral/tc/plib_tc1.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../../../My_MCC_Config/src/config/default/startup_xc32.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../../../My_MCC_Config/src/config/default/stdio/xc32_monitor.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../../../My_MCC_Config/src/lab3.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../../../My_MCC_Config/src/main.c")
+set_source_files_properties(${PL10_LowPower_LAB3_Program_Program_toolchain_FILE_TYPE_compile} PROPERTIES LANGUAGE C)
+set(PL10_LowPower_LAB3_Program_Program_toolchain_FILE_TYPE_compile_cpp)
+set_source_files_properties(${PL10_LowPower_LAB3_Program_Program_toolchain_FILE_TYPE_compile_cpp} PROPERTIES LANGUAGE CXX)
+set(PL10_LowPower_LAB3_Program_Program_toolchain_FILE_TYPE_link)
+set(PL10_LowPower_LAB3_Program_Program_toolchain_FILE_TYPE_bin2hex)
+
+# The linker script used for the build.
+set(PL10_LowPower_LAB3_Program_LINKER_SCRIPT "${CMAKE_CURRENT_SOURCE_DIR}/../../../My_MCC_Config/src/config/default/PIC32CM6408PL10028.ld")
+set(PL10_LowPower_LAB3_Program_image_name "Program.elf")
+set(PL10_LowPower_LAB3_Program_image_base_name "Program")
+
+# The output directory of the final image.
+set(PL10_LowPower_LAB3_Program_output_dir "${CMAKE_CURRENT_SOURCE_DIR}/../../../out/PL10_LowPower_LAB3")
+
+# The full path to the final image.
+set(PL10_LowPower_LAB3_Program_full_path_to_image ${PL10_LowPower_LAB3_Program_output_dir}/${PL10_LowPower_LAB3_Program_image_name})

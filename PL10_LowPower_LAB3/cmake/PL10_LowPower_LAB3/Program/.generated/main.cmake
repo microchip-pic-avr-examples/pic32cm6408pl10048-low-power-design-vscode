@@ -1,0 +1,69 @@
+include("${CMAKE_CURRENT_LIST_DIR}/rule.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/file.cmake")
+
+set(PL10_LowPower_LAB3_Program_library_list )
+
+# Handle files with suffix s, for group Program_toolchain
+if(PL10_LowPower_LAB3_Program_Program_toolchain_FILE_TYPE_assemble)
+add_library(PL10_LowPower_LAB3_Program_Program_toolchain_assemble OBJECT ${PL10_LowPower_LAB3_Program_Program_toolchain_FILE_TYPE_assemble})
+    PL10_LowPower_LAB3_Program_Program_toolchain_assemble_rule(PL10_LowPower_LAB3_Program_Program_toolchain_assemble)
+    list(APPEND PL10_LowPower_LAB3_Program_library_list "$<TARGET_OBJECTS:PL10_LowPower_LAB3_Program_Program_toolchain_assemble>")
+
+endif()
+
+# Handle files with suffix S, for group Program_toolchain
+if(PL10_LowPower_LAB3_Program_Program_toolchain_FILE_TYPE_assembleWithPreprocess)
+add_library(PL10_LowPower_LAB3_Program_Program_toolchain_assembleWithPreprocess OBJECT ${PL10_LowPower_LAB3_Program_Program_toolchain_FILE_TYPE_assembleWithPreprocess})
+    PL10_LowPower_LAB3_Program_Program_toolchain_assembleWithPreprocess_rule(PL10_LowPower_LAB3_Program_Program_toolchain_assembleWithPreprocess)
+    list(APPEND PL10_LowPower_LAB3_Program_library_list "$<TARGET_OBJECTS:PL10_LowPower_LAB3_Program_Program_toolchain_assembleWithPreprocess>")
+
+endif()
+
+# Handle files with suffix [cC], for group Program_toolchain
+if(PL10_LowPower_LAB3_Program_Program_toolchain_FILE_TYPE_compile)
+add_library(PL10_LowPower_LAB3_Program_Program_toolchain_compile OBJECT ${PL10_LowPower_LAB3_Program_Program_toolchain_FILE_TYPE_compile})
+    PL10_LowPower_LAB3_Program_Program_toolchain_compile_rule(PL10_LowPower_LAB3_Program_Program_toolchain_compile)
+    list(APPEND PL10_LowPower_LAB3_Program_library_list "$<TARGET_OBJECTS:PL10_LowPower_LAB3_Program_Program_toolchain_compile>")
+
+endif()
+
+# Handle files with suffix cpp, for group Program_toolchain
+if(PL10_LowPower_LAB3_Program_Program_toolchain_FILE_TYPE_compile_cpp)
+add_library(PL10_LowPower_LAB3_Program_Program_toolchain_compile_cpp OBJECT ${PL10_LowPower_LAB3_Program_Program_toolchain_FILE_TYPE_compile_cpp})
+    PL10_LowPower_LAB3_Program_Program_toolchain_compile_cpp_rule(PL10_LowPower_LAB3_Program_Program_toolchain_compile_cpp)
+    list(APPEND PL10_LowPower_LAB3_Program_library_list "$<TARGET_OBJECTS:PL10_LowPower_LAB3_Program_Program_toolchain_compile_cpp>")
+
+endif()
+
+# Handle files with suffix [cC], for group Program_toolchain
+if(PL10_LowPower_LAB3_Program_Program_toolchain_FILE_TYPE_dependentObject)
+add_library(PL10_LowPower_LAB3_Program_Program_toolchain_dependentObject OBJECT ${PL10_LowPower_LAB3_Program_Program_toolchain_FILE_TYPE_dependentObject})
+    PL10_LowPower_LAB3_Program_Program_toolchain_dependentObject_rule(PL10_LowPower_LAB3_Program_Program_toolchain_dependentObject)
+    list(APPEND PL10_LowPower_LAB3_Program_library_list "$<TARGET_OBJECTS:PL10_LowPower_LAB3_Program_Program_toolchain_dependentObject>")
+
+endif()
+
+# Handle files with suffix elf, for group Program_toolchain
+if(PL10_LowPower_LAB3_Program_Program_toolchain_FILE_TYPE_bin2hex)
+add_library(PL10_LowPower_LAB3_Program_Program_toolchain_bin2hex OBJECT ${PL10_LowPower_LAB3_Program_Program_toolchain_FILE_TYPE_bin2hex})
+    PL10_LowPower_LAB3_Program_Program_toolchain_bin2hex_rule(PL10_LowPower_LAB3_Program_Program_toolchain_bin2hex)
+    list(APPEND PL10_LowPower_LAB3_Program_library_list "$<TARGET_OBJECTS:PL10_LowPower_LAB3_Program_Program_toolchain_bin2hex>")
+
+endif()
+
+
+# Main target for this project
+add_executable(PL10_LowPower_LAB3_Program_image__AQTAt62 ${PL10_LowPower_LAB3_Program_library_list})
+
+set_target_properties(PL10_LowPower_LAB3_Program_image__AQTAt62 PROPERTIES
+    OUTPUT_NAME "Program"
+    SUFFIX ".elf"
+    RUNTIME_OUTPUT_DIRECTORY "${PL10_LowPower_LAB3_Program_output_dir}")
+target_link_libraries(PL10_LowPower_LAB3_Program_image__AQTAt62 PRIVATE ${PL10_LowPower_LAB3_Program_Program_toolchain_FILE_TYPE_link})
+
+# Add the link options from the rule file.
+PL10_LowPower_LAB3_Program_link_rule( PL10_LowPower_LAB3_Program_image__AQTAt62)
+
+# Call bin2hex function from the rule file
+PL10_LowPower_LAB3_Program_bin2hex_rule(PL10_LowPower_LAB3_Program_image__AQTAt62)
+

@@ -9,5 +9,18 @@
         "embedded-debug",
         "gdb",
         "mplab-core-da"
-    ]
+    ],
+    "mplab.ioview.columnWidths": {
+        "PL10_LowPower_LAB1-default": [
+            100,
+            100,
+            100,
+            100,
+            100,
+            660
+        ]
+    },
+    "mplab.ioview.taggedNodes": {
+        "PL10_LowPower_LAB1-default": []
+    }
 }
