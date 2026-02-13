@@ -89,57 +89,30 @@ int main ( void )
         SYS_Tasks ( );
         
         
-        /* === STEP 1: Wait for RTC 100 ms timeout ===
-         * Enter standby sleep mode to conserve power. The RTC compare interrupt
-         * will wake the MCU after 100ms. This is the deepest sleep state with
-         * lowest power consumption while maintaining peripheral operation.
-         */
-        PM_StandbyModeEnter();                  /* Enter standby until RTC fires */
+        /* === STEP 1: Enter Standby and wait for RTC 100 ms timeout === */
+        PM_StandbyModeEnter();                  /* Enter Standby until RTC fires */
         WAIT_FOR_100mS_RTC_TIMEOUT();           /* Wait for RTC interrupt, then clear flag */
-        
-        
-        /* === STEP 2: Activate light sensor and begin warm-up ===
-         * Start the TC1 timer for a 10ms warm-up delay. The sensor requires
-         * stabilization time before ADC sampling produces accurate readings.
-         */
+
+        /* === STEP 2: Power up light sensor and begin warm-up === */
         LightSensorVdd_Set();                   /* Apply power to light sensor */
         timer10msOccured = false;
-        TC1_TimerStart();                       /* Start 10ms sensor warm-up timer */
-        
-        
-        /* === STEP 3: Wait for 10 ms sensor warm-up period ===
-         * Enter standby mode during sensor stabilization to save power.
-         * TC1 overflow interrupt will wake the MCU when the sensor is ready.
-         */
+        TC1_TimerStart();                       /* Start 10 ms sensor warm-up timer */
+
+        /* === STEP 3: Enter Standby during sensor warm-up === */
         PM_StandbyModeEnter();                  /* Standby during sensor warm-up */
-        while (!timer10msOccured) { }           /* Wait for TC1 10ms timeout */
-        
-        
-        /* === STEP 4: Collect ADC samples from light sensor ===
-         * Perform 16 consecutive ADC conversions on the light sensor input.
-         * Multiple samples are collected to reduce noise through averaging.
-         * After sampling completes, power down the sensor immediately to
-         * minimize power consumption.
-         */
+        while (!timer10msOccured) { }           /* Wait for TC1 10 ms timeout */
+
+        /* === STEP 4: Collect ADC samples from light sensor === */
         StartADCDataCollection();               /* Collect 16 ADC samples */
         LightSensorVdd_Clear();                 /* Power down sensor to save power */
-        
-        
-        /* === STEP 5: Process and transmit data ===
-         * Calculate the average of the 16 raw samples, store the result in the
-         * circular buffer, and conditionally transmit all 20 buffered values
-         * over UART if the current reading exceeds the brightness threshold.
-         */
+
+        /* === STEP 5: Process and transmit data === */
         AverageLightSensorData();               /* Average 16 samples into single value */
         TransmitLightSensorDataToTerminal();    /* Send "Bright!" + 20 samples if > threshold */
         StoreLightSensorDataToBuffer();         /* Store averaged value in circular buffer */
-        
-        
-        /* === STEP 6: Prepare for next cycle ===
-         * Ensure UART is disabled before returning to standby mode. The
-         * system is now ready to enter sleep and wait for the next RTC timeout.
-         */
-        SERCOM1_USART_Disable();                /* Disable UART - ready for standby */
+
+        /* === STEP 6: Prepare for next cycle === */
+        SERCOM1_USART_Disable();                /* Disable UART - ready for Standby */
     }
 
     return ( EXIT_FAILURE );
