@@ -1,5 +1,30 @@
 {
-    "version": "1.9",
+    "version": "1.8",
+    "configurations": [
+        {
+            "name": "default",
+            "id": "",
+            "device": "PIC32CM6408PL10048",
+            "imageType": "application",
+            "imagePath": "./out/PL10_LowPower_LAB4/default.elf",
+            "toolProperties": "default-tool-base",
+            "tool": "PKOB nano",
+            "packs": [
+                {
+                    "name": "PIC32CM-PL_DFP",
+                    "version": "1.2.326",
+                    "vendor": "Microchip"
+                },
+                {
+                    "name": "CMSIS",
+                    "version": "6.2.0",
+                    "vendor": "ARM"
+                }
+            ],
+            "fileSet": "default",
+            "toolchain": "default-XC32"
+        }
+    ],
     "propertyGroups": [
         {
             "name": "default-XC32",
@@ -184,32 +209,6 @@
                 "My_MCC_Config/src/config/default/peripheral/tc/plib_tc2.h",
                 "My_MCC_Config/src/config/default/peripheral/tc/plib_tc2.c"
             ]
-        }
-    ],
-    "configurations": [
-        {
-            "name": "default",
-            "id": "",
-            "device": "PIC32CM6408PL10048",
-            "imageType": "application",
-            "imagePath": "./out/PL10_LowPower_LAB4/default.elf",
-            "toolProperties": "default-tool-base",
-            "tool": "PKOB nano",
-            "packs": [
-                {
-                    "name": "PIC32CM-PL_DFP",
-                    "version": "1.2.329",
-                    "vendor": "Microchip"
-                },
-                {
-                    "name": "CMSIS",
-                    "version": "6.2.0",
-                    "vendor": "ARM"
-                }
-            ],
-            "fileSet": "default",
-            "toolchain": "default-XC32",
-            "includeLegacyMacros": true
         }
     ]
 }

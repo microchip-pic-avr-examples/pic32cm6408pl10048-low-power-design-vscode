@@ -44,7 +44,7 @@ dmac_descriptor_registers_t adcTransferDescriptor __ALIGNED(16);
 
 static bool IsLightAboveThreshold(uint16_t threshold)
 {
-    for (uint8_t i = 0; i < NUMLIGHTSENSORMEASUREMENTSTOBUFFER; i++) {
+    for (uint16_t i = 0; i < NUMLIGHTSENSORMEASUREMENTSTOBUFFER; i++) {
         if (lightSensorData[i] > threshold) {
             return true;
         }
@@ -64,7 +64,7 @@ static bool IsLightAboveThreshold(uint16_t threshold)
  */
 void TransmitLightSensorData_SleepWalking(uint16_t * dataBuffer, uint16_t bufferIndex)
 {
-    uint8_t i = 0;
+    uint16_t i = 0;
     
     printf("\r\n\nBright!\r\n");
     for (i = 0; i < NUMLIGHTSENSORMEASUREMENTSTOBUFFER; i++) {
@@ -125,7 +125,12 @@ void SetADCTransferDescriptors(void)
     adcTransferDescriptor.DMAC_BTCNT    = NUMLIGHTSENSORMEASUREMENTSTOBUFFER;
     adcTransferDescriptor.DMAC_BTCTRL   = DMAC_BTCTRL_STEPSIZE(0) | DMAC_BTCTRL_STEPSEL(0) | DMAC_BTCTRL_DSTINC(1) | DMAC_BTCTRL_SRCINC(0) | DMAC_BTCTRL_BEATSIZE(1) | DMAC_BTCTRL_BLOCKACT(0) | DMAC_BTCTRL_EVOSEL(0) | DMAC_BTCTRL_VALID(1);
     adcTransferDescriptor.DMAC_DESCADDR = (uint32_t) (&adcTransferDescriptor);
-    adcTransferDescriptor.DMAC_DSTADDR  = ((uint32_t) (&lightSensorData[0])) + (NUMLIGHTSENSORMEASUREMENTSTOBUFFER * 2);
+
+    /* DMA requires DSTADDR to point to the byte AFTER the last element when
+     * destination increment is enabled. BEATSIZE(1) = 2-byte (HWORD) transfers,
+     * so for 20 elements we need: base_addr + (20 * 2 bytes) = base + 40 bytes */
+    adcTransferDescriptor.DMAC_DSTADDR  = ((uint32_t) (&lightSensorData[0])) + (NUMLIGHTSENSORMEASUREMENTSTOBUFFER * sizeof(uint16_t));
+
     adcTransferDescriptor.DMAC_SRCADDR  = (uint32_t) (&(ADC0_REGS->ADC_RESULT));
     DMAC_ChannelLinkedListTransfer (DMAC_CHANNEL_0, &adcTransferDescriptor);
 }
@@ -133,20 +138,33 @@ void SetADCTransferDescriptors(void)
 /**
  * @brief Transmit buffered samples to the terminal (sleepwalking mode)
  *
- * Enables SERCOM1 for transmission, sends the buffered samples, clears
- * the ADC window comparator interrupt flag, and then disables SERCOM1.
+ * Checks if any buffered samples exceed the ADC window threshold. If so,
+ * enables SERCOM1, transmits the data, and disables SERCOM1. Always clears
+ * the window comparator interrupt flag before returning.
+ *
+ * Note: This function assumes SERCOM1 has been initialized (via
+ * SetCPUSpeedToNormal) but not yet enabled. SERCOM1 state is explicitly
+ * managed here to ensure it's disabled before returning to low-power mode.
  */
 void TransmitLightSensorDataToTerminal(void)
 {
     uint16_t highThreshold = (uint16_t)ADC0_REGS->ADC_WINHT;
 
+    /* Check if any sample exceeds threshold */
     if (!IsLightAboveThreshold(highThreshold)) {
+        /* No transmission needed - clear flag and return */
         ADC0_REGS->ADC_INTFLAG = (ADC_INTFLAGSET_WCMP_Msk);
+        /* Note: SERCOM1 remains in initialized-but-disabled state, which is
+         * correct. It will be explicitly disabled again by ReduceCPUSpeed()
+         * before entering low-power mode. */
         return;
     }
 
+    /* Threshold exceeded - enable SERCOM1 and transmit data */
     SERCOM1_USART_Enable();
-    TransmitLightSensorData_SleepWalking(&lightSensorData[0], DMAC_ChannelGetTransferredCount(DMAC_CHANNEL_0)); 
+    TransmitLightSensorData_SleepWalking(&lightSensorData[0], DMAC_ChannelGetTransferredCount(DMAC_CHANNEL_0));
+
+    /* Clear interrupt flag and disable SERCOM1 to conserve power */
     ADC0_REGS->ADC_INTFLAG = (ADC_INTFLAGSET_WCMP_Msk);
     SERCOM1_USART_Disable();
 }
@@ -170,12 +188,13 @@ static void SetGclk0(uint32_t src, uint16_t div)
 }
 
 /**
- * @brief Reduce CPU clock speed for power savings during idle periods
- * 
- * Lowers the system clock by reconfiguring GCLK0 to use a low-frequency
- * source with a divider, then updates MCLK to apply the change. This
- * reduces active power consumption between sampling events.
- * 
+ * @brief Reduce CPU clock speed for ultra-low power during idle periods
+ *
+ * Switches the CPU clock to OSC32K (32.768 kHz internal RC oscillator) for
+ * minimum active power consumption. OSC32K is already enabled and running
+ * (used by GCLK1), so this switch is immediate. The OSCHF oscillator can
+ * gate off automatically when not in use, further reducing power.
+ *
  * @param None
  * @return None
  */
@@ -184,9 +203,9 @@ void ReduceCPUSpeed(void)
      /* UART must be disabled before lowering GCLK0 */
      SERCOM1_USART_Disable();
 
-     /* Switch CPU clock to OSCHF / 6 = 4 MHz / 64 = 62.5 kHz */
-     SetGclk0(0UL, 6UL); /* SRC=OSCHF per plib_clock.c */
-     MCLK_REGS->MCLK_CPUDIV = MCLK_CPUDIV_CPUDIV_DIV64;
+     /* Switch CPU clock to OSC32K @ 32.768 kHz (SRC=3 per device headers) */
+     SetGclk0(3UL, 1UL); /* SRC=OSC32K, DIV=1 → 32.768 kHz CPU clock */
+     MCLK_REGS->MCLK_CPUDIV = MCLK_CPUDIV_CPUDIV_DIV1;
 
     /* Wait for clock ready (avoid hanging forever) */
     uint32_t timeout = 100000U;
@@ -197,18 +216,19 @@ void ReduceCPUSpeed(void)
 }
 /**
  * @brief Restore CPU clock to normal operating speed
- * 
- * Reconfigures GCLK0 and MCLK to return the CPU to its normal operating
- * frequency (e.g., OSCHF/3 = 8 MHz). Waits for the clock ready flag to
- * ensure the system clock is stable before returning.
- * 
+ *
+ * Reconfigures GCLK0 to switch from OSC32K back to OSCHF/3 = 8 MHz.
+ * The OSCHF oscillator will automatically start if it was gated off during
+ * low-power operation. Waits for the clock ready flag before reinitializing
+ * the UART to match the restored baud rate.
+ *
  * @param None
  * @return None
  */
 void SetCPUSpeedToNormal(void)
 {
-     /* Restore CPU clock to OSCHF / 3 = 8 MHz */
-     SetGclk0(0UL, 3UL); /* SRC=OSCHF per plib_clock.c */
+     /* Restore CPU clock to OSCHF / 3 = 8 MHz (SRC=0 per plib_clock.c) */
+     SetGclk0(0UL, 3UL); /* SRC=OSCHF, DIV=3 → 8 MHz CPU clock */
      MCLK_REGS->MCLK_CPUDIV = MCLK_CPUDIV_CPUDIV_DIV1;
 
     /* Wait for clock ready (avoid hanging forever) */

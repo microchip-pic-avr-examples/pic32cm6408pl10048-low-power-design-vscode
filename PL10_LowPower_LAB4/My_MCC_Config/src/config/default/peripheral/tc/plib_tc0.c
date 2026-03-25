@@ -89,8 +89,8 @@ void TC0_CompareInitialize( void )
     /* Configure timer one shot mode & direction */
     TC0_REGS->COUNT16.TC_CTRLBSET = (uint8_t)(TC_CTRLBSET_ONESHOT_Msk);
 
-    TC0_REGS->COUNT16.TC_CC[0] = 349U;
-    TC0_REGS->COUNT16.TC_CC[1] = 348U;
+    TC0_REGS->COUNT16.TC_CC[0] = 392U;
+    TC0_REGS->COUNT16.TC_CC[1] = 391U;
 
     /* Clear all interrupt flags */
     TC0_REGS->COUNT16.TC_INTFLAG = (uint8_t)TC_INTFLAG_Msk;

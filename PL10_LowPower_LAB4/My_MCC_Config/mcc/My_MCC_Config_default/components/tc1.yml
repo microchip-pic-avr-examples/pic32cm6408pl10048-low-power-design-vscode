@@ -71,7 +71,6 @@ data:
     TC_TIMER_TIME_MS:
       attributes:
         id: TC_TIMER_TIME_MS
-        label: Time
       children:
       - children:
         - attributes:

@@ -22,8 +22,8 @@ data:
     - children:
       - attributes:
           id: tc0
-          x: '380'
-          y: '169'
+          x: '378'
+          y: '174'
         type: ElementPosition
       type: ElementPositions
     type: ComponentGraph
@@ -57,25 +57,23 @@ data:
     TC_COMPARE_CC0:
       attributes:
         id: TC_COMPARE_CC0
-        label: Compare 0 Value (Period)
       children:
       - children:
         - attributes:
-            value: '349'
+            value: '392'
           type: User
         type: Values
       type: Long
     TC_COMPARE_CC1:
       attributes:
         id: TC_COMPARE_CC1
-        label: Compare 1 Value
       children:
       - children:
         - attributes:
             id: max
           children:
           - type: Value
-            value: '349'
+            value: '392'
           type: Long
         - attributes:
             id: visible
@@ -86,7 +84,7 @@ data:
         type: Attributes
       - children:
         - attributes:
-            value: '348'
+            value: '391'
           type: User
         type: Values
       type: Long
@@ -164,6 +162,16 @@ data:
           type: User
         type: Values
       type: KeyValueSet
+    TC_CTRLA_ONDEMAND:
+      attributes:
+        id: TC_CTRLA_ONDEMAND
+      children:
+      - children:
+        - attributes:
+            value: 'true'
+          type: User
+        type: Values
+      type: Boolean
     TC_CTRLA_RUNSTDBY:
       attributes:
         id: TC_CTRLA_RUNSTDBY
@@ -184,9 +192,9 @@ data:
           type: User
         type: Values
       type: Combo
-    TC_TIMER_EVCTRL_EV:
+    TC_TIMER_CTRLBSET_ONESHOT:
       attributes:
-        id: TC_TIMER_EVCTRL_EV
+        id: TC_TIMER_CTRLBSET_ONESHOT
       children:
       - children:
         - attributes:
@@ -194,24 +202,6 @@ data:
           type: User
         type: Values
       type: Boolean
-    TC_TIMER_EVCTRL_EVACT:
-      attributes:
-        id: TC_TIMER_EVCTRL_EVACT
-      children:
-      - children:
-        - attributes:
-            id: visible
-          children:
-          - type: Value
-            value: 'true'
-          type: Boolean
-        type: Attributes
-      - children:
-        - attributes:
-            value: '1'
-          type: User
-        type: Values
-      type: KeyValueSet
     TC_TIMER_HEADER:
       attributes:
         id: TC_TIMER_HEADER
@@ -238,45 +228,4 @@ data:
           type: Boolean
         type: Attributes
       type: File
-    TC_CTRLA_ONDEMAND:
-      attributes:
-        id: TC_CTRLA_ONDEMAND
-        label: Clock On Demand
-      children:
-      - children:
-        - attributes:
-            value: 'true'
-          type: User
-        type: Values
-      type: Boolean
-    TC_FREQUENCY:
-      attributes:
-        id: TC_FREQUENCY
-      children:
-      - children:
-        - attributes:
-            id: tc0
-            value: '32768'
-          type: Dynamic
-        type: Values
-      type: Integer
-    TC_TIMER_PERIOD:
-      attributes:
-        id: TC_TIMER_PERIOD
-      children:
-      - children:
-        - attributes:
-            id: max
-          children:
-          - type: Value
-            value: '65535'
-          type: Long
-        type: Attributes
-      - children:
-        - attributes:
-            id: tc0
-            value: '31'
-          type: Dynamic
-        type: Values
-      type: Long
   userData: {}

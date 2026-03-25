@@ -42,19 +42,17 @@ data:
     EVSYS_CHANNEL_3_GENERATOR_ACTIVE:
       attributes:
         id: EVSYS_CHANNEL_3_GENERATOR_ACTIVE
-        label: Event Source Status
       children:
       - children:
         - attributes:
             id: evsys
-            value: 'true'
+            value: 'false'
           type: Dynamic
         type: Values
       type: Boolean
     EVSYS_CHANNEL_1_GENERATOR_ACTIVE:
       attributes:
         id: EVSYS_CHANNEL_1_GENERATOR_ACTIVE
-        label: Event Source Status
       children:
       - children:
         - attributes:
@@ -66,7 +64,6 @@ data:
     EVSYS_CHANNEL_0_GENERATOR_ACTIVE:
       attributes:
         id: EVSYS_CHANNEL_0_GENERATOR_ACTIVE
-        label: Event Source Status
       children:
       - children:
         - attributes:
@@ -89,7 +86,6 @@ data:
     EVSYS_CHANNEL_2_USER_READY:
       attributes:
         id: EVSYS_CHANNEL_2_USER_READY
-        label: Event Users Status
       children:
       - children:
         - attributes:
@@ -101,7 +97,6 @@ data:
     EVSYS_CHANNEL_1_USER_READY:
       attributes:
         id: EVSYS_CHANNEL_1_USER_READY
-        label: Event Users Status
       children:
       - children:
         - attributes:
@@ -113,7 +108,6 @@ data:
     EVSYS_CHANNEL_0_USER_READY:
       attributes:
         id: EVSYS_CHANNEL_0_USER_READY
-        label: Event Users Status
       children:
       - children:
         - attributes:
@@ -125,7 +119,6 @@ data:
     EVSYS_CHANNEL_3_USER_READY:
       attributes:
         id: EVSYS_CHANNEL_3_USER_READY
-        label: Event Users Status
       children:
       - children:
         - attributes:
@@ -259,11 +252,6 @@ data:
           type: User
         type: Values
       type: Boolean
-    EVSYS_CHANNEL_3:
-      attributes:
-        id: EVSYS_CHANNEL_3
-        label: Enable Channel 3
-      type: Boolean
     GENERATOR_DMAC_CH_0_ACTIVE:
       attributes:
         id: GENERATOR_DMAC_CH_0_ACTIVE
@@ -283,17 +271,6 @@ data:
         - attributes:
             id: core
             value: 'false'
-          type: Dynamic
-        type: Values
-      type: Boolean
-    USER_TC0_EVU_READY:
-      attributes:
-        id: USER_TC0_EVU_READY
-      children:
-      - children:
-        - attributes:
-            id: tc0
-            value: 'true'
           type: Dynamic
         type: Values
       type: Boolean
@@ -334,11 +311,10 @@ data:
     EVSYS_CHANNEL_3_GENERATOR:
       attributes:
         id: EVSYS_CHANNEL_3_GENERATOR
-        label: Event Source
       children:
       - children:
         - attributes:
-            value: '3'
+            value: '5'
           type: User
         type: Values
       type: KeyValueSet
@@ -362,17 +338,6 @@ data:
           type: User
         type: Values
       type: Boolean
-    EVSYS_USER_6:
-      attributes:
-        id: EVSYS_USER_6
-        label: TC0_EVU Channel Selection
-      children:
-      - children:
-        - attributes:
-            value: '1'
-          type: User
-        type: Values
-      type: KeyValueSet
     EVSYS_USER_7:
       attributes:
         id: EVSYS_USER_7
@@ -429,9 +394,36 @@ data:
           type: User
         type: Values
       type: Boolean
-    EVSYS_USER_0:
+    GENERATOR_ADC0_SAMPRDY_ACTIVE:
       attributes:
-        id: EVSYS_USER_0
-        label: PORT_EV_0 Channel Selection
+        id: GENERATOR_ADC0_SAMPRDY_ACTIVE
+      children:
+      - children:
+        - attributes:
+            id: adc0
+            value: 'false'
+          type: Dynamic
+        type: Values
+      type: Boolean
+    USER_TC0_EVU_READY:
+      attributes:
+        id: USER_TC0_EVU_READY
+      children:
+      - children:
+        - attributes:
+            id: tc0
+            value: 'true'
+          type: Dynamic
+        type: Values
+      type: Boolean
+    EVSYS_USER_6:
+      attributes:
+        id: EVSYS_USER_6
+      children:
+      - children:
+        - attributes:
+            value: '1'
+          type: User
+        type: Values
       type: KeyValueSet
   userData: {}

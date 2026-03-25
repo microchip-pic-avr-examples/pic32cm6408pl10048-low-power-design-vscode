@@ -8,7 +8,7 @@ function(PL10_LowPower_LAB4_default_default_XC32_assemble_rule target)
         "${ASSEMBLER_PRE}"
         "-mprocessor=32CM6408PL10048"
         "-Wa,--defsym=__MPLAB_BUILD=1${MP_EXTRA_AS_POST},--defsym=__MPLAB_DEBUG=1,--defsym=__DEBUG=1,--gdwarf-2"
-        "-mdfp=${PACK_REPO_PATH}/Microchip/PIC32CM-PL_DFP/1.2.326")
+        "-mdfp=${PACK_REPO_PATH}/Microchip/PIC32CM-PL_DFP/1.2.329")
     list(REMOVE_ITEM options "")
     target_compile_options(${target} PRIVATE "${options}")
     target_compile_definitions(${target} PRIVATE "__DEBUG=1")
@@ -20,7 +20,7 @@ function(PL10_LowPower_LAB4_default_default_XC32_assembleWithPreprocess_rule tar
         "-g"
         "${MP_EXTRA_AS_PRE}"
         "${DEBUGGER_NAME_AS_MACRO}"
-        "-mdfp=${PACK_REPO_PATH}/Microchip/PIC32CM-PL_DFP/1.2.326"
+        "-mdfp=${PACK_REPO_PATH}/Microchip/PIC32CM-PL_DFP/1.2.329"
         "-mprocessor=32CM6408PL10048"
         "-Wa,--defsym=__MPLAB_BUILD=1${MP_EXTRA_AS_POST},--defsym=__MPLAB_DEBUG=1,--gdwarf-2,--defsym=__DEBUG=1")
     list(REMOVE_ITEM options "")
@@ -40,7 +40,7 @@ function(PL10_LowPower_LAB4_default_default_XC32_compile_rule target)
         "-ffunction-sections"
         "-fdata-sections"
         "-O1"
-        "-mdfp=${PACK_REPO_PATH}/Microchip/PIC32CM-PL_DFP/1.2.326")
+        "-mdfp=${PACK_REPO_PATH}/Microchip/PIC32CM-PL_DFP/1.2.329")
     list(REMOVE_ITEM options "")
     target_compile_options(${target} PRIVATE "${options}")
     target_compile_definitions(${target}
@@ -72,7 +72,7 @@ function(PL10_LowPower_LAB4_default_default_XC32_compile_cpp_rule target)
         "-ffunction-sections"
         "-O1"
         "-fno-common"
-        "-mdfp=${PACK_REPO_PATH}/Microchip/PIC32CM-PL_DFP/1.2.326")
+        "-mdfp=${PACK_REPO_PATH}/Microchip/PIC32CM-PL_DFP/1.2.329")
     list(REMOVE_ITEM options "")
     target_compile_options(${target} PRIVATE "${options}")
     target_compile_definitions(${target}
@@ -94,7 +94,7 @@ endfunction()
 function(PL10_LowPower_LAB4_default_dependentObject_rule target)
     set(options
         "-mprocessor=32CM6408PL10048"
-        "-mdfp=${PACK_REPO_PATH}/Microchip/PIC32CM-PL_DFP/1.2.326")
+        "-mdfp=${PACK_REPO_PATH}/Microchip/PIC32CM-PL_DFP/1.2.329")
     list(REMOVE_ITEM options "")
     target_compile_options(${target} PRIVATE "${options}")
 endfunction()
@@ -107,7 +107,7 @@ function(PL10_LowPower_LAB4_default_link_rule target)
         "-mprocessor=32CM6408PL10048"
         "-mno-device-startup-code"
         "-Wl,--defsym=__MPLAB_BUILD=1${MP_EXTRA_LD_POST},--script=${PL10_LowPower_LAB4_default_LINKER_SCRIPT},--defsym=__MPLAB_DEBUG=1,--defsym=__DEBUG=1,--defsym=_min_heap_size=512,--gc-sections,-Map=mem.map,--report-mem,--memorysummary,memoryfile.xml"
-        "-mdfp=${PACK_REPO_PATH}/Microchip/PIC32CM-PL_DFP/1.2.326")
+        "-mdfp=${PACK_REPO_PATH}/Microchip/PIC32CM-PL_DFP/1.2.329")
     list(REMOVE_ITEM options "")
     target_link_options(${target} PRIVATE "${options}")
     target_compile_definitions(${target} PRIVATE "XPRJ_default=default")

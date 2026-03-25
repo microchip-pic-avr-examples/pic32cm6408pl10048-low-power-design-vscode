@@ -161,7 +161,7 @@ Labs 2, 3, and 4 use the [AMBIENT Click Board™ (MIKROE-1890)](https://www.mikr
 | 1 | Baseline Standby Current | Isolate regulator and leakage current with no active peripherals | ~1.16 mA | ~1.15 mA |
 | 2 | Active Mode Light Sensor | Periodic ADC sampling with UART reporting; optional CPU clock scaling | ~1.96 mA (no scaling) / ~1.31 mA (with scaling) | ~3.02 mA (no scaling) / ~1.64 mA (with scaling) |
 | 3 | Standby Mode Light Sensor | Move sampling into Standby mode to reduce idle current | ~895 µA | ~1.06 mA |
-| 4 | Sleepwalking Light Sensor | Event-driven peripheral operation without CPU wake-up | ~931 µA | ~1.06 mA |
+| 4 | Sleepwalking Light Sensor | Event-driven peripheral operation without CPU wake-up | ~475 µA | ~559 µA |
 
 ---
 
@@ -441,19 +441,19 @@ After completing Lab 4, the following will be understood:
 
 ## Overview
 
-In this lab, the light sensor is sampled every 100 ms using event-triggered ADC conversions. Sixteen samples are accumulated and averaged in hardware, then DMA stores each averaged value into a circular buffer (20 entries). When the light level crosses the window threshold, TC2 generates an interrupt to wake the CPU so it can transmit the last 20 samples to the terminal. The CPU spends most of the time in Standby while the peripherals "sleepwalk."
+In this lab, the light sensor is sampled using event-triggered ADC conversions. The RTC generates periodic events (~100 ms using OSC1K 1.024 kHz clock source with COMP=102), which trigger TC0 and TC1 via EVSYS Channel 0. TC0 generates a ~12 ms PWM pulse to power the sensor, while TC1 provides ADC timing delay (~10 ms). When TC1 overflows, it triggers the ADC conversion. DMA stores ADC results into a circular buffer (20 entries). The ADC result ready event (RESRDY) triggers TC2 via EVSYS Channel 2, which generates an overflow interrupt (~4.9 µs later) that wakes the CPU. The CPU then checks if any buffered samples exceed the window threshold (upper threshold = 1024) and transmits data only when the threshold is crossed. The CPU spends most of the time in Standby while the peripherals "sleepwalk."
 
 ### What Changes from Lab 3
 
 | Aspect | Lab 3 | Lab 4 |
 |--------|-------|-------|
-| Sampling Trigger | RTC interrupt wakes CPU | RTC event triggers TC0/TC1 via EVSYS |
+| Sampling Trigger | RTC interrupt wakes CPU | RTC event triggers TC0/TC1 via EVSYS (~100 ms period) |
 | ADC Trigger | Software (`ADC0_ConversionStart()`) | Hardware event from TC1 overflow |
 | Data Storage | CPU reads ADC result | DMA transfers to circular buffer |
 | CPU Wake Condition | Every 100 ms (RTC interrupt) | Only on ADC window threshold (TC2 interrupt) |
 | New Peripherals | — | TC0, TC2, EVSYS, DMAC |
 | UART Baud Rate | 230400 | 460800 |
-| Sensor Power | GPIO macro (PA22) | TC0 PWM output (PA00) |
+| Sensor Power | GPIO macro (PA22) | TC0 PWM output (PA00, ~12 ms pulse) |
 
 This lab moves the periodic sampling pipeline entirely out of the CPU and into the event system, timers, ADC, and DMA. The CPU wakes only for threshold events — not on every 100 ms cycle.
 
@@ -467,21 +467,21 @@ Lab 4 replaces CPU-driven sampling with a fully hardware-orchestrated event chai
 
 | Peripheral | Role | Power Rationale |
 |------------|------|-----------------|
-| **RTC** | 100 ms event generator (Compare 0 → EVSYS Ch0) | Interrupt disabled — drives events only, no CPU wake |
-| **TC0** | ~10.6 ms PWM pulse on PA00 to power the sensor | One-shot, event-retriggered from EVSYS Ch0; runs in Standby |
-| **TC1** | ADC pacing timer — overflow triggers ADC start | Event-retriggered from EVSYS Ch0; overflow → EVSYS Ch1 |
-| **ADC0** | 16-sample hardware accumulation + window comparator | Event-triggered from EVSYS Ch1; result → EVSYS Ch2 + DMA |
-| **DMA** | Transfers averaged ADC result to circular buffer in RAM | Linked-list descriptors; runs in Standby; no CPU involvement |
-| **TC2** | CPU wakeup — 5 µs one-shot triggered by ADC window event | Only fires when threshold is crossed (EVSYS Ch2) |
+| **RTC** | ~100 ms event generator (OSC1K @ 1.024 kHz, COMP=102, DIV1 prescaler → Compare 0 → EVSYS Ch0) | Interrupt disabled — drives events only, no CPU wake |
+| **TC0** | ~12 ms PWM pulse (CC[0]=392, CC[1]=391 @ 32.768 kHz) on PA00 to power sensor | One-shot, event-retriggered from EVSYS Ch0; runs in Standby |
+| **TC1** | ADC pacing timer (~10 ms delay, CC[0]=326 @ 32.768 kHz) — overflow triggers ADC start | Event-retriggered from EVSYS Ch0; overflow → EVSYS Ch1 |
+| **ADC0** | 12-bit ADC with window comparator (threshold: 512-1024), accumulation mode | Event-triggered from EVSYS Ch1; result → EVSYS Ch2 + DMA |
+| **DMA** | Transfers ADC result to circular buffer in RAM | Linked-list descriptors; runs in Standby; no CPU involvement |
+| **TC2** | CPU wakeup timer (~4.9 µs, CC[0]=39 @ 8 MHz) triggered by ADC window event | One-shot; fires only when window threshold is crossed |
 | **SERCOM1** | UART at 460800 baud (higher baud = shorter transmit time) | Disabled except during threshold-triggered transmission |
 
 ### Event System Routing
 
 | EVSYS Channel | Generator | Users | Purpose |
 |---------------|-----------|-------|---------|
-| Channel 0 | RTC_CMP_0 | TC0 EVU, TC1 EVU | Start sensor power pulse and ADC pacing timer |
-| Channel 1 | TC1_OVF | ADC0_START | Trigger ADC conversion after sensor warm-up |
-| Channel 2 | ADC0_RESRDY | TC2 EVU | Wake CPU only when window threshold is crossed |
+| Channel 0 | RTC_CMP_0 (EVGEN 4) | TC0 EVU, TC1 EVU | Start sensor power pulse and ADC pacing timer every ~100 ms |
+| Channel 1 | TC1_OVF (EVGEN 36) | ADC0_START | Trigger ADC conversion after sensor warm-up (~10 ms) |
+| Channel 2 | ADC0_RESRDY (EVGEN 49) | TC2 EVU | Trigger TC2 timer on ADC result ready (TC2 wakes CPU via interrupt) |
 
 > **Tip:** To examine the full event routing and peripheral configuration, open the Lab 4 project in MCC and inspect the Event Configurator plugin and individual peripheral settings.
 
@@ -497,11 +497,11 @@ Unlike Labs 2–3, the main loop in Lab 4 is event-driven rather than sequential
 
 **Main Loop (repeats indefinitely):**
 1. **`PM_StandbyModeEnter()`** — CPU enters Standby. The entire sampling pipeline (RTC → EVSYS → TC0/TC1 → ADC → DMA) runs autonomously without CPU involvement.
-2. **Threshold wake** — If the ADC window comparator detects a reading above the threshold, the event chain triggers TC2, which fires an interrupt to wake the CPU.
-3. **Transmit** — CPU restores clock speed, suspends DMA for safe buffer access, transmits the last 20 averaged values, resumes DMA, and reduces clock speed.
-4. **Return to Standby** — Loop restarts at step 1.
+2. **CPU wake** — The ADC result ready event triggers TC2, which fires an overflow interrupt (~4.9 µs after each ADC conversion) to wake the CPU. Note: The ADC window comparator interrupt (WCMP) is also enabled and can wake the CPU when threshold is crossed.
+3. **Check and transmit** — CPU restores clock speed to 8 MHz, suspends DMA for safe buffer access, checks if any of the last 20 buffered samples exceed the window threshold (1024), and transmits data only if threshold is crossed. If below threshold, no transmission occurs.
+4. **Return to Standby** — CPU resumes DMA, reduces clock speed back to 32.768 kHz, and loop restarts at step 1.
 
-If the light stays below the threshold, the CPU never wakes — the peripherals continue sampling indefinitely while the core remains in Standby.
+The CPU wakes on each ADC conversion (~100 ms intervals) but transmits only when light exceeds the threshold, minimizing UART active time.
 
 ## Expected Results
 
@@ -524,10 +524,10 @@ When the AMBIENT Click Board senses a bright environment, the terminal shows the
 #### Figure 11: Lab 4 Power Analysis
 
 Example measurements:
-- **Ch1:** Average ~931 µA (min ~752 µA, max ~1.96 mA)
-- **Ch4:** Average ~1.06 mA, peak ~3.23 mA
+- **Ch1:** Average ~475 µA (min ~217 µA, max ~1.96 mA)
+- **Ch4:** Average ~559 µA (min ~187 µA, max ~2.76 mA)
 
-The Ch1 average of ~931 µA is comparable to Lab 3 (~895 µA), confirming that moving the sampling trigger, ADC pacing, and data storage entirely into the event system and DMA does not increase average consumption. The Ch4 average (~1.06 mA) matches Lab 3 as well, while the Ch4 peak drops from ~3.52 mA to ~3.23 mA because the CPU no longer executes ADC collection code on every cycle — it wakes only when the window comparator signals a threshold crossing. Compared to the Lab 1 baseline (~1.16 mA), the sleepwalking application achieves a lower average despite running a complete ambient-light monitoring pipeline, because the CPU is in Standby for the vast majority of each cycle.
+The Ch1 average of ~475 µA represents a significant improvement over Lab 3 (~895 µA), demonstrating that the fully event-driven architecture with optimized clock management delivers measurable power savings. The Ch4 average (~559 µA) is also notably lower than Lab 3 (~1.06 mA), and the Ch4 peak (~2.76 mA) is reduced from Lab 3's ~3.52 mA because the CPU spends minimal time active. Remarkably, Lab 4 achieves lower average power than even the Lab 1 baseline (~1.16 mA) while running a complete ambient-light monitoring pipeline with event-driven sampling, DMA transfers, and threshold-based UART transmission — all because the CPU remains in Standby at reduced clock speed for the vast majority of each cycle.
 
 ### Why Lab 4 Is the Most Efficient
 
@@ -545,7 +545,7 @@ These code examples provide specific instructions to reduce system power consump
 | 2 | Active mode sampling (no CPU scaling) | ~1.96 mA | ~3.02 mA | — (reference) |
 | 2 | Active mode sampling (with CPU scaling) | ~1.31 mA | ~1.64 mA | **−46%** |
 | 3 | Standby mode sampling | ~895 µA | ~1.06 mA | **−65%** |
-| 4 | Sleepwalking (event-driven) | ~931 µA | ~1.06 mA | **−65%** |
+| 4 | Sleepwalking (event-driven) | ~475 µA | ~559 µA | **−82%** |
 
 ### What Each Lab Demonstrates
 
@@ -558,7 +558,7 @@ These code examples provide specific instructions to reduce system power consump
 - **Lab 3 — Standby Mode:** Replacing active idle time with `PM_StandbyModeEnter()` achieves a 65% reduction from the Lab 2 reference (3.02 mA → 1.06 mA on Ch4). The CPU wakes only for interrupt-driven events (RTC compare, TC1 timeout, ADC result ready), so the MCU spends the vast majority of each 100 ms cycle at near-baseline current. This is the recommended starting point for any battery-powered application that requires periodic sampling.
 
 - **Lab 4 — Sleepwalking:** The event system, timers, ADC, and DMA handle the entire sampling pipeline autonomously — the CPU does not wake on every 100 ms cycle. It wakes only when the ADC window comparator detects a threshold crossing, which means:
-  - **Power stays at 65% below the active-mode reference**, matching Lab 3 while performing the same work.
+  - **Power drops to 82% below the active-mode reference** (3.02 mA → 559 µA on Ch4), achieving lower consumption than even the Lab 1 idle baseline while performing useful work.
   - **CPU bandwidth is freed for other tasks.** Because the core is not involved in the periodic sample-average-store loop, it is available for communication stacks, sensor fusion, user-interface updates, or any other foreground work — all without disturbing the sampling schedule or increasing power consumption.
   - **Latency is deterministic.** The hardware event chain guarantees consistent 100 ms sample timing regardless of CPU load, eliminating jitter that software-driven loops can introduce.
 

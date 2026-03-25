@@ -89,19 +89,40 @@ int main ( void )
 
     while ( true )
     {
-      /* Enter standby mode - CPU will sleep until RTC wakes it up */
-        PM_StandbyModeEnter();
-        
-      /* Suspend the DMA channel */
-        SetCPUSpeedToNormal();
-        DMAC_ChannelSuspend( DMAC_CHANNEL_0);
+        /* =====================================================================
+         * MAIN EVENT LOOP: Wake → Process → Sleep Cycle
+         * =====================================================================
+         * This loop implements ultra-low-power operation:
+         * 1. Sleep in standby mode at 32.768 kHz CPU clock
+         * 2. Wake on ADC window comparator interrupt
+         * 3. Process at 8 MHz to transmit data via UART
+         * 4. Return to sleep
+         *
+         * Critical ordering:
+         * - Clock MUST be restored before suspending DMA (peripheral timing)
+         * - Clock MUST be restored before UART transmission (baud rate)
+         * - DMA MUST be suspended during transmission (data coherency)
+         * ===================================================================== */
 
-        /* Transmit the light sensor data to terminal */
+        /* Enter standby mode - CPU will sleep until ADC window comparator wakes it */
+        PM_StandbyModeEnter();
+
+        /* Restore CPU to 8 MHz and reinitialize UART for correct baud rate.
+         * This must happen BEFORE DMA suspend for reliable peripheral access. */
+        SetCPUSpeedToNormal();
+
+        /* Suspend DMA channel to prevent data corruption while reading buffer.
+         * Suspension at full clock speed ensures reliable register access. */
+        DMAC_ChannelSuspend(DMAC_CHANNEL_0);
+
+        /* Transmit the light sensor data to terminal (UART requires 8 MHz clock) */
         TransmitLightSensorDataToTerminal();
-        
-        /* Resume the DMA channel */
+
+        /* Resume DMA channel to continue background ADC sampling */
         DMAC_ChannelResume(DMAC_CHANNEL_0);
 
+        /* Reduce CPU clock back to 32.768 kHz for ultra-low power consumption.
+         * This also disables UART to save power. */
         ReduceCPUSpeed();
     }
     

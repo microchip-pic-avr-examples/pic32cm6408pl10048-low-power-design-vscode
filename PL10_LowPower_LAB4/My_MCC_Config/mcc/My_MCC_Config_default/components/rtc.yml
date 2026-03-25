@@ -41,7 +41,6 @@ data:
     RTC_MODE0_TIMER_COMPARE:
       attributes:
         id: RTC_MODE0_TIMER_COMPARE
-        label: Compare Value
       children:
       - children:
         - attributes:

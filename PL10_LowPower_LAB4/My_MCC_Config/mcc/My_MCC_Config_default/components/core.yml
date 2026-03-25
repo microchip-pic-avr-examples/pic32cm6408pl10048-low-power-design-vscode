@@ -22,8 +22,8 @@ data:
     - children:
       - attributes:
           id: core
-          x: '889'
-          y: '5'
+          x: '567'
+          y: '113'
         type: ElementPosition
       type: ElementPositions
     type: ComponentGraph
@@ -180,7 +180,6 @@ data:
     MCLK_APBC_INITIAL_VALUE:
       attributes:
         id: MCLK_APBC_INITIAL_VALUE
-        label: MCLK_APBC_INITIAL_VALUE
       children:
       - children:
         - attributes:
@@ -747,16 +746,6 @@ data:
           type: Boolean
         type: Attributes
       type: Integer
-    GCLK_2_OUTPUTENABLE:
-      attributes:
-        id: GCLK_2_OUTPUTENABLE
-      children:
-      - children:
-        - attributes:
-            value: 'false'
-          type: User
-        type: Values
-      type: Boolean
     GCLK_1_DIVIDER_VALUE:
       attributes:
         id: GCLK_1_DIVIDER_VALUE
@@ -1940,7 +1929,6 @@ data:
     EVSYS_3_CLOCK_FREQUENCY:
       attributes:
         id: EVSYS_3_CLOCK_FREQUENCY
-        label: EVSYS_3 Clock Frequency
       children:
       - children:
         - attributes:
@@ -1952,7 +1940,6 @@ data:
     GCLK_ID_4_FREQ:
       attributes:
         id: GCLK_ID_4_FREQ
-        label: 'Peripheral Channel 4 Frequency '
       children:
       - children:
         - attributes:
@@ -1964,7 +1951,6 @@ data:
     GCLK_ID_4_CHEN:
       attributes:
         id: GCLK_ID_4_CHEN
-        label: Peripheral Channel 4 Clock Enable
       children:
       - children:
         - attributes:
@@ -1976,7 +1962,6 @@ data:
     EVSYS_3_CLOCK_ENABLE:
       attributes:
         id: EVSYS_3_CLOCK_ENABLE
-        label: EVSYS_3 Clock Enable
       children:
       - children:
         - attributes:
@@ -2337,39 +2322,6 @@ data:
           type: Dynamic
         type: Values
       type: String
-    TC0_INTERRUPT_ENABLE:
-      attributes:
-        id: TC0_INTERRUPT_ENABLE
-      children:
-      - children:
-        - attributes:
-            id: tc0
-            value: 'false'
-          type: Dynamic
-        type: Values
-      type: Boolean
-    TC0_INTERRUPT_HANDLER:
-      attributes:
-        id: TC0_INTERRUPT_HANDLER
-      children:
-      - children:
-        - attributes:
-            id: tc0
-            value: TC0_Handler
-          type: Dynamic
-        type: Values
-      type: String
-    TC0_INTERRUPT_HANDLER_LOCK:
-      attributes:
-        id: TC0_INTERRUPT_HANDLER_LOCK
-      children:
-      - children:
-        - attributes:
-            id: tc0
-            value: 'false'
-          type: Dynamic
-        type: Values
-      type: Boolean
     TC2_INTERRUPT_ENABLE:
       attributes:
         id: TC2_INTERRUPT_ENABLE
@@ -2742,16 +2694,6 @@ data:
           type: User
         type: Values
       type: Boolean
-    GCLK_INST_NUM2:
-      attributes:
-        id: GCLK_INST_NUM2
-      children:
-      - children:
-        - attributes:
-            value: 'false'
-          type: User
-        type: Values
-      type: Boolean
     GCLK_2_DIVIDER_VALUE:
       attributes:
         id: GCLK_2_DIVIDER_VALUE
@@ -2759,18 +2701,8 @@ data:
       - children:
         - attributes:
             id: core
-            value: '3'
+            value: '1'
           type: Dynamic
-        type: Values
-      type: Integer
-    GCLK_2_DIV:
-      attributes:
-        id: GCLK_2_DIV
-      children:
-      - children:
-        - attributes:
-            value: '3'
-          type: User
         type: Values
       type: Integer
     GCLK_ID_8_GENSEL:
@@ -2783,6 +2715,59 @@ data:
           type: User
         type: Values
       type: KeyValueSet
+    GCLK_2_SRC:
+      attributes:
+        id: GCLK_2_SRC
+      children:
+      - children:
+        - attributes:
+            value: '1'
+          type: User
+        type: Values
+      type: KeyValueSet
+    OSCHF_OSCHFCTRL_ONDEMAND:
+      attributes:
+        id: OSCHF_OSCHFCTRL_ONDEMAND
+      children:
+      - children:
+        - attributes:
+            value: '1'
+          type: User
+        type: Values
+      type: KeyValueSet
+    TC0_INTERRUPT_ENABLE:
+      attributes:
+        id: TC0_INTERRUPT_ENABLE
+      children:
+      - children:
+        - attributes:
+            id: tc0
+            value: 'false'
+          type: Dynamic
+        type: Values
+      type: Boolean
+    TC0_INTERRUPT_HANDLER:
+      attributes:
+        id: TC0_INTERRUPT_HANDLER
+      children:
+      - children:
+        - attributes:
+            id: tc0
+            value: TC0_Handler
+          type: Dynamic
+        type: Values
+      type: String
+    TC0_INTERRUPT_HANDLER_LOCK:
+      attributes:
+        id: TC0_INTERRUPT_HANDLER_LOCK
+      children:
+      - children:
+        - attributes:
+            id: tc0
+            value: 'false'
+          type: Dynamic
+        type: Values
+      type: Boolean
   userData:
     children:
     - attributes:

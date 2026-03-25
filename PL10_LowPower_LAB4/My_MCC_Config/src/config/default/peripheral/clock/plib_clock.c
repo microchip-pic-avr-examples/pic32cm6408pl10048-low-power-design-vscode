@@ -59,10 +59,7 @@ static void OSCCTRL_Initialize(void)
     /* Configure OSCHF Oscillator */
     OSCCTRL_REGS->OSCCTRL_OSCHFCTRL = OSCCTRL_OSCHFCTRL_FRQSEL(0x9);
 
-    while ((OSCCTRL_REGS->OSCCTRL_STATUS & OSCCTRL_STATUS_OSCHFRDY_Msk) != OSCCTRL_STATUS_OSCHFRDY_Msk)
-    {
-        /* Waiting for the OSCHF Ready state */
-    }
+    OSCCTRL_REGS->OSCCTRL_OSCHFCTRL |= OSCCTRL_OSCHFCTRL_ONDEMAND_Msk;
 }
 
 

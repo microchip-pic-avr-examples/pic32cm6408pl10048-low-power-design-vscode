@@ -47,7 +47,7 @@ generatedFileHashHistoryMap:
 - file: ..\src\config\default\peripheral\adc\plib_adc_common.h
   hash: 68c5928a7207b8984c1c07999ad22770c8564f261784d1b6f5858c53119013b7
 - file: ..\src\config\default\peripheral\clock\plib_clock.c
-  hash: 78378ddfab9fedc6b5f3d6dce1093d9e46cfa8850317a3faa54801ed7b96f1c7
+  hash: 1a0ceae31c34c263cd40c578783a0d82674ef8cd6793121c84d322d8c31279f6
 - file: ..\src\config\default\peripheral\clock\plib_clock.h
   hash: 5c751a5947890774f3971015256f9dcff88778669b18b808f57c07a8b6944882
 - file: ..\src\config\default\peripheral\dmac\plib_dmac.c
@@ -89,7 +89,7 @@ generatedFileHashHistoryMap:
 - file: ..\src\config\default\peripheral\supc\plib_supc.h
   hash: 9c011cd4e3c7a0181a877bd3171d661e0a74727b98177ac27251cad06ca755a3
 - file: ..\src\config\default\peripheral\tc\plib_tc0.c
-  hash: c822ce99631581083634e2493945d416bb15d8d7de65520c8a6238fa1e62df6e
+  hash: c19d4cce2c9f3a2e67df163950ddcbeef0ff2e49c8bec719d00ad91e73107a3c
 - file: ..\src\config\default\peripheral\tc\plib_tc0.h
   hash: 81e528bcece18896b0e094dbfc9d94cc808b403a2b9fba79b4ea00977fee4f78
 - file: ..\src\config\default\peripheral\tc\plib_tc1.c

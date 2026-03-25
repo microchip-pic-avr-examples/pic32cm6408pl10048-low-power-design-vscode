@@ -8,6 +8,12 @@
     "mplab.clangd.arguments": [
       "--compile-commands-dir=${workspaceFolder}\\_build\\PL10_LowPower_LAB1\\default"
     ],
-    "mplab.clangd.path": "c:\\Program Files\\Microchip\\xc32\\v5.00\\bin\\xc32-clangd.exe"
+    "mplab.clangd.path": "c:\\Program Files\\Microchip\\xc32\\v5.00\\bin\\xc32-clangd.exe",
+    "memory-inspector.debugTypes": [
+      "arm-debugger",
+      "embedded-debug",
+      "gdb",
+      "mplab-core-da"
+    ]
   }
 }
